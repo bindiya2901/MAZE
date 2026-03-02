@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Maze Game</title>
-  <link rel="stylesheet" href="css/level.css">
+  <meta charset="UTF-8" />
+  <title>Maze - Select Level</title>
+  <link rel="stylesheet" href="css/level.css" />
 </head>
+
 <body>
 
 <header class="main-header">
@@ -12,16 +14,13 @@
     <img src="assets/club-logo.png" class="logo">
   </div>
 
-  <div class="navbar-center">
-    Maze
-  </div>
+  <div class="navbar-center">Maze</div>
 
   <nav class="header-nav">
     <a href="index.html">Home</a>
     <a href="maze.html">Maze</a>
   </nav>
 
-  <!-- PROFILE -->
   <div class="profile-wrapper hidden" id="profileWrapper">
     <img id="profilePic" class="profile-pic" />
 
@@ -43,33 +42,14 @@
 </header>
 
 <main>
-  <h2>Introduction</h2>
-  <p>Web-based animated logic puzzle game.
-Player navigates through a grid to collect key and unlock a door.
-Each level has a 3-minute timer.
-Hitting a wall resets the player to the start, but the timer continues.
-Invalid moves (outside grid or door without keys) are blocked.
-Difficulty increases with larger grid sizes.
-Player progress is saved with login.
-Global leaderboard ranks players by fastest completion time.</p>
+  <h2>Select Level</h2>
 
-  <h2>Instructions</h2>
-  <ul>
-    <li>Sign in to start playing. Your progress will be saved automatically.</li>
-    <li>Use the arrow keys (or on-screen controls) to move the player up, down, left, or right.</li>
-    <li>The goal of each level is to collect key and then reach the door.</li>
-    <li>You have 3 minutes to complete each level. The timer does not reset after mistakes.</li>
-    <li>Do not hit walls — hitting a wall will reset the player to the starting position and all keys will be lost.</li>
-    <li>You cannot enter the door without collecting key; such moves are blocked.</li>
-    <li>You cannot move outside the grid; attempts to do so will keep you in the same position.</li>
-    <li>After collecting key, move to the door to complete the level.</li>
-    <li>Complete levels faster to achieve a better score on the leaderboard.</li>
-    <li>You can sign out anytime and continue later from the last completed level.</li>
-  </ul>
+  <button id="resumeBtn">Resume</button>
 
-  <button id="googleLogin" class="google-btn">
-  Login with Google
-</button>
+  <div id="levels">
+    <!-- Your level buttons 1–30 -->
+    ${[...Array(30)].map((_,i)=>`<button data-level="${i+1}"><span class="label">${i+1}</span></button>`).join("")}
+  </div>
 </main>
 
 <footer>
@@ -77,30 +57,62 @@ Global leaderboard ranks players by fastest completion time.</p>
 </footer>
 
 <script type="module">
-import { auth, provider, signInWithPopup, db, doc, getDoc, setDoc } from "./js/firebase.js";
+import { db } from "./js/firebase.js";
+import {
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-document.getElementById("loginBtn").onclick = async () => {
-  const result = await signInWithPopup(auth, provider);
-  const user = result.user;
+document.addEventListener("DOMContentLoaded", async () => {
 
-  const ref = doc(db, "users", user.uid);
-  const snap = await getDoc(ref);
+  const uid = localStorage.getItem("uid");
 
-  if (!snap.exists()) {
-    await setDoc(ref, {
-      name: user.displayName,
-      email: user.email,
-      unlockedLevel: 1,
-      bestTimes: {}
-    });
+  if (!uid) {
+    alert("Please sign in first.");
+    window.location.href = "login.html"; // change if needed
+    return;
   }
 
-  localStorage.setItem("uid", user.uid);
-  window.location.href = "maze.html";
-};
+  try {
+    const ref = doc(db, "users", uid);
+    const snap = await getDoc(ref);
+
+    const unlockedLevel = snap.exists()
+      ? snap.data().unlockedLevel || 1
+      : 1;
+
+    localStorage.setItem("currentLevel", unlockedLevel);
+
+    const resumeBtn = document.getElementById("resumeBtn");
+    resumeBtn.onclick = () => {
+      window.location.href = `levels/level${unlockedLevel}.html`;
+    };
+
+    const buttons = document.querySelectorAll("#levels button");
+
+    buttons.forEach(btn => {
+      const level = Number(btn.dataset.level);
+
+      if (level > unlockedLevel) {
+        btn.disabled = true;
+        btn.classList.add("locked");
+      }
+
+      btn.onclick = () => {
+        if (level <= unlockedLevel) {
+          window.location.href = `levels/level${level}.html`;
+        }
+      };
+    });
+
+  } catch (err) {
+    console.error("Error loading progress:", err);
+  }
+
+});
 </script>
 
-<script type="module" src="js/firebase.js"></script>
-<script type="module" src="js/auth.js"></script>
+<script type="module" src="js/profile.js"></script>
+
 </body>
 </html>
