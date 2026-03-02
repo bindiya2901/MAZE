@@ -1,0 +1,117 @@
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: linear-gradient(135deg,#dbeafe,#eef2ff);
+  display: flex;
+  justify-content: center;
+  padding: 80px 20px;
+}
+
+.leaderboard-card {
+  width: 850px;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #1e3a8a;
+}
+
+/* Filter */
+.filter-box {
+  margin-bottom: 20px;
+}
+
+select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 14px;
+  text-align: center;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+th {
+  background: #f1f5f9;
+}
+
+/* Animated badge */
+.badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-weight: bold;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+  100% { transform: scale(1); }
+}
+
+/* 🥇 Gold */
+.gold {
+  background: linear-gradient(135deg,#ffd700,#ffb800);
+  color: black;
+}
+
+/* 🥈 Silver */
+.silver {
+  background: linear-gradient(135deg,#d1d5db,#9ca3af);
+  color: black;
+}
+
+/* 🥉 Bronze */
+.bronze {
+  background: linear-gradient(135deg,#cd7f32,#a0522d);
+  color: white;
+}
+
+tr:hover {
+  background: #f9fafb;
+}
+
+/* ================= BACKGROUND ICONS ================= */
+
+.bg-icons {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.bg-icons span {
+  position: absolute;
+  font-size: 40px;
+  opacity: 10;
+  animation: floatIcon 20s linear infinite;
+}
+
+/* Random positions */
+.bg-icons span:nth-child(1) { top: 10%; left: 15%; animation-duration: 18s; }
+.bg-icons span:nth-child(2) { top: 40%; left: 70%; animation-duration: 25s; }
+.bg-icons span:nth-child(3) { top: 70%; left: 25%; animation-duration: 22s; }
+.bg-icons span:nth-child(4) { top: 20%; left: 80%; animation-duration: 30s; }
+.bg-icons span:nth-child(5) { top: 85%; left: 10%; animation-duration: 27s; }
+.bg-icons span:nth-child(6) { top: 55%; left: 45%; animation-duration: 24s; }
+.bg-icons span:nth-child(7) { top: 35%; left: 5%; animation-duration: 20s; }
+.bg-icons span:nth-child(8) { top: 75%; left: 85%; animation-duration: 28s; }
+
+@keyframes floatIcon {
+  0%   { transform: translateY(0px) rotate(0deg); }
+  50%  { transform: translateY(-40px) rotate(180deg); }
+  100% { transform: translateY(0px) rotate(360deg); }
+}
