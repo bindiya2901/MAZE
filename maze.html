@@ -90,51 +90,53 @@
 <!-- 🔥 LOGIC -->
 <script type="module">
 import { db } from "./js/firebase.js";
-import {
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-/* ================= AUTH ================= */
-const uid = localStorage.getItem("uid");
-if (!uid) {
-  location.href = "index.html";
-}
+import { doc, getDoc } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-/* ================= FETCH PROGRESS ================= */
-const ref = doc(db, "users", uid);
-const snap = await getDoc(ref);
+document.addEventListener("DOMContentLoaded", async () => {
 
-const unlockedLevel = snap.exists()
-  ? snap.data().unlockedLevel || 1
-  : 1;
+  const uid = localStorage.getItem("uid");
+  if (!uid) return;
 
-localStorage.setItem("currentLevel", unlockedLevel);
+  try {
+    const ref = doc(db, "users", uid);
+    const snap = await getDoc(ref);
 
-/* ================= RESUME ================= */
-const resumeBtn = document.getElementById("resumeBtn");
-resumeBtn.onclick = () => {
-  location.href = `levels/level${unlockedLevel}.html`;
-};
+    const unlockedLevel = snap.exists()
+      ? snap.data().unlockedLevel || 1
+      : 1;
 
-/* ================= LEVEL BUTTONS ================= */
-const buttons = document.querySelectorAll("#levels button");
+    localStorage.setItem("currentLevel", unlockedLevel);
 
-buttons.forEach(btn => {
-  const level = Number(btn.dataset.level);
+    const resumeBtn = document.getElementById("resumeBtn");
+    if (resumeBtn) {
+      resumeBtn.onclick = () => {
+        window.location.href = `levels/level${unlockedLevel}.html`;
+      };
+    }
 
-  if (level > unlockedLevel) {
-    btn.disabled = true;
-    btn.classList.add("locked");
+    const buttons = document.querySelectorAll("#levels button");
+
+    if (buttons.length > 0) {
+      buttons.forEach(btn => {
+        const level = Number(btn.dataset.level);
+
+        if (level > unlockedLevel) {
+          btn.disabled = true;
+          btn.classList.add("locked");
+        }
+
+        btn.onclick = () => {
+          if (level <= unlockedLevel) {
+            window.location.href = `levels/level${level}.html`;
+          }
+        };
+      });
+    }
+
+  } catch (err) {
+    console.error("Error loading progress:", err);
   }
 
-  btn.onclick = () => {
-    if (level <= unlockedLevel) {
-      location.href = `levels/level${level}.html`;
-    }
-  };
 });
 </script>
-
-<script type="module" src="js/profile.js"></script>
-</body>
-</html>

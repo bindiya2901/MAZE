@@ -4,6 +4,7 @@
   <title>Maze Game</title>
   <link rel="stylesheet" href="css/level.css">
 </head>
+
 <body>
 
 <header class="main-header">
@@ -43,68 +44,47 @@
 </header>
 
 <main>
-  <h2>Introduction</h2>
-  <p>Web-based animated logic puzzle game.
-Player navigates through a grid to collect key and unlock a door.
+
+<h2>Introduction</h2>
+
+<p>
+Web-based animated logic puzzle game.
+Player navigates through a grid to collect a key and unlock a door.
 Each level has a 3-minute timer.
-Hitting a wall resets the player to the start, but the timer continues.
-Invalid moves (outside grid or door without keys) are blocked.
 Difficulty increases with larger grid sizes.
 Player progress is saved with login.
-Global leaderboard ranks players by fastest completion time.</p>
+Global leaderboard ranks players by fastest completion time.
+</p>
 
-  <h2>Instructions</h2>
-  <ul>
-    <li>Sign in to start playing. Your progress will be saved automatically.</li>
-    <li>Use the arrow keys (or on-screen controls) to move the player up, down, left, or right.</li>
-    <li>The goal of each level is to collect key and then reach the door.</li>
-    <li>You have 3 minutes to complete each level. The timer does not reset after mistakes.</li>
-    <li>Do not hit walls — hitting a wall will reset the player to the starting position and all keys will be lost.</li>
-    <li>You cannot enter the door without collecting key; such moves are blocked.</li>
-    <li>You cannot move outside the grid; attempts to do so will keep you in the same position.</li>
-    <li>After collecting key, move to the door to complete the level.</li>
-    <li>Complete levels faster to achieve a better score on the leaderboard.</li>
-    <li>You can sign out anytime and continue later from the last completed level.</li>
-  </ul>
+<h2>Instructions</h2>
 
-  <button id="googleLogin" class="google-btn">
-  Login with Google
+<ul>
+<li>Sign in to start playing. Your progress will be saved automatically.</li>
+<li>Use arrow keys or on-screen controls to move.</li>
+<li>Collect the key and reach the door.</li>
+<li>You have 3 minutes to complete each level.</li>
+<li>Hitting a wall resets the player.</li>
+<li>You cannot enter the door without the key.</li>
+<li>You cannot move outside the grid.</li>
+<li>Complete levels faster to rank higher on the leaderboard.</li>
+</ul>
+
+<!-- LOGIN BUTTON -->
+<button id="googleSignIn" class="google-btn">
+Login with Google
 </button>
+
 </main>
 
 <footer>
-  Contact Us: emceeonclubepgi@gmail.com
+Contact Us: emceeonclubepgi@gmail.com
 </footer>
 
-<script type="module">
-import { db } from "./js/firebase.js";
-import {
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-document.getElementById("loginBtn").onclick = async () => {
-  const result = await signInWithPopup(auth, provider);
-  const user = result.user;
-
-  const ref = doc(db, "users", user.uid);
-  const snap = await getDoc(ref);
-
-  if (!snap.exists()) {
-    await setDoc(ref, {
-      name: user.displayName,
-      email: user.email,
-      unlockedLevel: 1,
-      bestTimes: {}
-    });
-  }
-
-  localStorage.setItem("uid", user.uid);
-  window.location.href = "maze.html";
-};
-</script>
-
-<script type="module" src="js/firebase.js"></script>
+<!-- LOGIN SCRIPT -->
 <script type="module" src="js/auth.js"></script>
+
+<!-- PROFILE SCRIPT -->
+<script type="module" src="js/profile.js"></script>
+
 </body>
 </html>
